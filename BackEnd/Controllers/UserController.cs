@@ -4,7 +4,9 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web;
-
+using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Xml.Linq;
 
 namespace BackEnd.Controllers
 {
@@ -27,22 +29,22 @@ namespace BackEnd.Controllers
 		{
 			var token = _getToken(postData);
 
-			if (token == null) return BadRequest(string.Empty);
+			if (token == null) return BadRequest("Invalid Token");
 			
 			_contextAccessor.HttpContext.Session.SetString("token", token);
 
 			return Ok(new{Token = token});
 		}
 
-		[HttpGet("image")]
-		public async Task<IActionResult> GetBase64Image(/*User user*/)
-		{
-			var b64Code = _getBase64Code();
-			
-			if (b64Code == null)
-				return BadRequest();
 
-			return Ok(b64Code);
+		[HttpGet("image")]
+		public async Task<IActionResult> GetBase64Image([FromHeader(Name = "Authorization")] string? jwt)
+		{
+			var b64Code = _getBase64Code(jwt);
+
+			if (b64Code == null|| b64Code ==string.Empty) return BadRequest("Not Authorized");
+
+			return Ok( new {b64Code});			
 		}
 
 
@@ -75,16 +77,13 @@ namespace BackEnd.Controllers
 		}
 
 
-		private string _getBase64Code()
+		private string _getBase64Code(string token)
 		{
 			using (var client = new HttpClient())
 			{
 				var endPoint = "https://services2.i-centrum.se/recruitment/profile/avatar";
 
-				var getTokenfromSession = _contextAccessor.HttpContext.Session.GetString("token");
-
-				//passing auth header token
-				client.DefaultRequestHeaders.Add("Authorization", "Bearer " + getTokenfromSession);
+				client.DefaultRequestHeaders.Add("Authorization", token);
 
 				var getBase64CodeFromEndpoint = client.GetStringAsync(endPoint).Result;
 
@@ -92,20 +91,8 @@ namespace BackEnd.Controllers
 
 				var code64 = desData.SelectToken("data").Value<string>();
 
-				//var baseCode64 = _removeExtraCode(code64);
-
 				return code64;
 			}
-		}
-
-		//private string _removeExtraCode(string base64Code)
-		//{
-		//	string input = base64Code;
-		//	int index = input.IndexOf("//");
-		//	if (index >= 0)
-		//		input = input.Substring(0, index);
-
-		//	return input;
-		//}
+		}		
 	}
 }

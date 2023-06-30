@@ -14,13 +14,7 @@
 
 </form>
 
-<div *ngIf="result">
-    <h3>Your Token</h3>
-    <textarea style="width:300px; height:150px"> {{result}}</textarea>
-</div>
 
-<button (click)="getImage()" type="submit" class="btn btn-primary">Submit</button>
-
-<div *ngIf="base64Data">
-    <div> {{base64Data}}</div>
+<div *ngIf="imageUrl">
+    <div>{{imageUrl}}</div>
 </div>

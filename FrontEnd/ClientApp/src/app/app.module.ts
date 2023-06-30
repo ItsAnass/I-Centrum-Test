@@ -12,6 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { LoginComponent } from './components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { ConvertBase64ImgPipe } from './convert-base64-img.pipe';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    LoginComponent,    
+    LoginComponent,
+    ConvertBase64ImgPipe,    
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
