@@ -33,19 +33,11 @@ export class LoginComponent implements OnInit {
         next: (res) => {
           console.log(res.messsage)
           this.auth.storeToken(res.token);         
-          this.result = localStorage.getItem('token')?.toString();
-          /*this.getImage();*/
+          this.result = localStorage.getItem('token')?.toString();        
           this.auth.getImg().subscribe({
             next: (result) => {
               console.log(result)
-
-            },
-
-            complete: () => { console.log(this.base64Data) }
-
-
-
-          })      
+            }})      
           return this.result;          
         },
         error: (err) => {
@@ -54,19 +46,12 @@ export class LoginComponent implements OnInit {
       }) 
   }
 
-  getImage() {
-    this.http.get('https://localhost:7000/api/User/image').subscribe({
-      next: (response: any) => this.base64Data = response,
-      error: error => console.log(error),
-      complete: () => {
-        console.log('request completed')
-        console.log(this.base64Data)
-        console.log('extra statment')
-      }
-    }) 
-
-    
-  }
+  //getImage() {
+  //  this.http.get('https://localhost:7000/api/User/image').subscribe({
+  //    next: (response: any) => this.base64Data = response,
+  //    error: error => console.log(error)
+  //  });  
+  //}
 
 
   

@@ -8,13 +8,13 @@ export class AuthService {
 
   
 
-  private baseUrl: string = "https://localhost:7000/api/User/authenticate"
-  private getImage: string = "https://localhost:7000/api/User/image"
+  private authUrl: string = "https://localhost:7000/api/User/authenticate"
+  private imageUrl: string = "https://localhost:7000/api/User/image"
 
   constructor(private http: HttpClient) { }
 
   login(loginObj: any) {
-    return this.http.post<any>(`${this.baseUrl}`, loginObj);
+    return this.http.post<any>(`${this.authUrl}`, loginObj);
   }
 
 
@@ -27,14 +27,8 @@ export class AuthService {
   }
 
   getImg() {
-    return this.http.get<any>(`${this.getImage}`);
+    return this.http.get<any>(`${this.imageUrl}`);
   }
 
-  //public creat_image(data: any) {
-  //  return this.http.
-  //}
-
-  //public get_image() {
-  //  return this.http.get(this.getImage);
-  //}
+  
 }
