@@ -46,12 +46,20 @@ export class LoginComponent implements OnInit {
       }) 
   }
 
-  //getImage() {
-  //  this.http.get('https://localhost:7000/api/User/image').subscribe({
-  //    next: (response: any) => this.base64Data = response,
-  //    error: error => console.log(error)
-  //  });  
-  //}
+   myString = 'Hello, C# backend!';
+  test() {
+    this.auth.sendStringToBackend(this.myString).subscribe(
+      response => {
+        console.log('String sent successfully!');
+        // Handle the response from the backend if needed
+      },
+      error => {
+        console.error('Error sending string:', error);
+        // Handle the error if needed
+      }
+    );
+  }
+  
 
 
   

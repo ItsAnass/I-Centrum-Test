@@ -35,7 +35,7 @@ namespace BackEnd.Controllers
 		}
 
 		[HttpGet("image")]
-		public async Task<IActionResult> GetBase64Image()
+		public async Task<IActionResult> GetBase64()
 		{
 			var b64Code = _getBase64Code();
 			
@@ -44,8 +44,7 @@ namespace BackEnd.Controllers
 
 			return Ok(b64Code);
 		}
-
-
+		
 		private string _getToken(User user)
 		{
 			using (var client = new HttpClient())
@@ -92,9 +91,9 @@ namespace BackEnd.Controllers
 
 				var code64 = desData.SelectToken("data").Value<string>();
 
-				var baseCode64 = _removeExtraCode(code64);
+				//var baseCode64 = _removeExtraCode(code64);
 
-				return baseCode64;
+				return code64;
 			}
 		}
 
