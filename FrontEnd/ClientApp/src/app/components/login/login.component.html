@@ -15,6 +15,7 @@
 </form>
 
 
-<div *ngIf="imageUrl">
-    <div>{{imageUrl}}</div>
+<div *ngIf="base64Data">
+    <img src={{base64Data}} />
 </div>
+
