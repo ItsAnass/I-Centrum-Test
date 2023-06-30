@@ -66,12 +66,21 @@ export class LoginComponent implements OnInit {
   downloadFile() {
     let toBase64 = btoa(this.base64Data); 
     const byteArray = new Uint8Array(atob(toBase64).split('').map(char => char.charCodeAt(0)));
-    const file = new Blob([byteArray], { type:'image/jpeg'})
-    this.imageUrl = URL.createObjectURL(file);
+
+
+    const file = new Blob([byteArray], { type: 'image/PNG'})
+    /*this.imageUrl = URL.createObjectURL(file);*/
+     const fileUrl = URL.createObjectURL(file)
+    let filename = 'downloaded';
+    let link = document.createElement('a');
+    link.download = filename;
+    link.target = '_blank'
+    link.href = fileUrl
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
        
   }
-
-
 }
 
 
