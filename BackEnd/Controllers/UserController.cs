@@ -92,20 +92,20 @@ namespace BackEnd.Controllers
 
 				var code64 = desData.SelectToken("data").Value<string>();
 
-				var baseCode64 = _removeExtraCode(code64);
+				//var baseCode64 = _removeExtraCode(code64);
 
-				return baseCode64;
+				return code64;
 			}
 		}
 
-		private string _removeExtraCode(string base64Code)
-		{
-			string input = base64Code;
-			int index = input.IndexOf("//");
-			if (index >= 0)
-				input = input.Substring(0, index);
+		//private string _removeExtraCode(string base64Code)
+		//{
+		//	string input = base64Code;
+		//	int index = input.IndexOf("//");
+		//	if (index >= 0)
+		//		input = input.Substring(0, index);
 
-			return input;
-		}
+		//	return input;
+		//}
 	}
 }
