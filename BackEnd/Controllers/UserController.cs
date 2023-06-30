@@ -4,7 +4,9 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web;
-
+using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Xml.Linq;
 
 namespace BackEnd.Controllers
 {
@@ -30,19 +32,42 @@ namespace BackEnd.Controllers
 			if (token == null) return BadRequest(string.Empty);
 			
 			_contextAccessor.HttpContext.Session.SetString("token", token);
-
 			return Ok(new{Token = token});
 		}
 
-		[HttpGet("image")]
-		public async Task<IActionResult> GetBase64Image(/*User user*/)
-		{
-			var b64Code = _getBase64Code();
-			
-			if (b64Code == null)
-				return BadRequest();
 
-			return Ok(b64Code);
+		[HttpGet("image")]
+		public async Task<IActionResult> GetBase64Image([FromHeader(Name = "Authorization")] string jwt)
+		{
+			//var b64Code = _getBase64Code();
+
+			//if (b64Code == string.Empty)
+			//	return BadRequest();
+
+			//return Ok(b64Code);
+			using (var client = new HttpClient())
+			{
+				var endPoint = "https://services2.i-centrum.se/recruitment/profile/avatar";
+
+				//var getTokenfromSession = _contextAccessor.HttpContext.Session.GetString("token");
+				//Request.Headers.TryGetValue("Authorization", out StringValues headerValues);
+
+				//string jsonWebToken = headerValues.FirstOrDefault();
+				//passing auth header token
+				client.DefaultRequestHeaders.Add("Authorization",  jwt);
+
+
+				var getBase64CodeFromEndpoint = client.GetStringAsync(endPoint).Result;
+
+				var desData = (JObject)JsonConvert.DeserializeObject(getBase64CodeFromEndpoint);
+
+				var code64 = desData.SelectToken("data").Value<string>();
+
+				//var baseCode64 = _removeExtraCode(code64);
+				if (code64 == string.Empty|| code64 == null) return BadRequest();
+
+				return Ok(code64);
+			}
 		}
 
 
@@ -75,28 +100,31 @@ namespace BackEnd.Controllers
 		}
 
 
-		private string _getBase64Code()
-		{
-			using (var client = new HttpClient())
-			{
-				var endPoint = "https://services2.i-centrum.se/recruitment/profile/avatar";
+		//private string _getBase64Code()
+		//{
+		//	//using (var client = new HttpClient())
+		//	//{
+		//	//	var endPoint = "https://services2.i-centrum.se/recruitment/profile/avatar";
 
-				var getTokenfromSession = _contextAccessor.HttpContext.Session.GetString("token");
+		//	//	//var getTokenfromSession = _contextAccessor.HttpContext.Session.GetString("token");
+		//	//	Request.Headers.TryGetValue("Authorization", out StringValues headerValues);
+				
+		//	//	string jsonWebToken = headerValues.FirstOrDefault();
+		//	//	//passing auth header token
+		//	//	client.DefaultRequestHeaders.Add("Authorization", "Bearer " + jsonWebToken);
+				
 
-				//passing auth header token
-				client.DefaultRequestHeaders.Add("Authorization", "Bearer " + getTokenfromSession);
+		//	//	var getBase64CodeFromEndpoint = client.GetStringAsync(endPoint).Result;
 
-				var getBase64CodeFromEndpoint = client.GetStringAsync(endPoint).Result;
+		//	//	var desData = (JObject)JsonConvert.DeserializeObject(getBase64CodeFromEndpoint);
 
-				var desData = (JObject)JsonConvert.DeserializeObject(getBase64CodeFromEndpoint);
+		//	//	var code64 = desData.SelectToken("data").Value<string>();
 
-				var code64 = desData.SelectToken("data").Value<string>();
+		//	//	//var baseCode64 = _removeExtraCode(code64);
 
-				//var baseCode64 = _removeExtraCode(code64);
-
-				return code64;
-			}
-		}
+		//	//	return code64;
+		//	//}
+		//}
 
 		//private string _removeExtraCode(string base64Code)
 		//{
