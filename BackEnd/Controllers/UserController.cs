@@ -35,7 +35,7 @@ namespace BackEnd.Controllers
 		}
 
 		[HttpGet("image")]
-		public async Task<IActionResult> GetBase64Image()
+		public async Task<IActionResult> GetBase64Image(/*User user*/)
 		{
 			var b64Code = _getBase64Code();
 			
