@@ -29,9 +29,10 @@ namespace BackEnd.Controllers
 		{
 			var token = _getToken(postData);
 
-			if (token == null) return BadRequest(string.Empty);
+			if (token == null) return BadRequest("Invalid Token");
 			
 			_contextAccessor.HttpContext.Session.SetString("token", token);
+
 			return Ok(new{Token = token});
 		}
 
@@ -41,7 +42,7 @@ namespace BackEnd.Controllers
 		{
 			var b64Code = _getBase64Code(jwt);
 
-			if (b64Code == null|| b64Code ==string.Empty) return BadRequest(string.Empty);
+			if (b64Code == null|| b64Code ==string.Empty) return BadRequest("Not Authorized");
 
 			return Ok( new {b64Code});			
 		}
