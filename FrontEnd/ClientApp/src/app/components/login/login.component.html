@@ -1,4 +1,3 @@
-
 <!--<form [formGroup]="loginForm">
     <div class="form-group">
         <label for="exampleInputEmail1">Email address</label>
@@ -17,20 +16,26 @@
     <div class="form-group">
         <label for="exampleInputEmail1">Email</label>
         <input formControlName="username" type="text" placeholder="Username">
-        
+
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Password</label>
         <input formControlName="password" type="password" placeholder="Password">
     </div>
-    
+
 
     <button (click)="onLogin()" type="submit" class="btn btn-primary">Submit</button>
 
 </form>
 
-    <div *ngIf="result">
-        <h3>Your Token</h3>
-        <textarea style="width:300px; height:150px"> {{result}}</textarea>
+<div *ngIf="result">
+    <h3>Your Token</h3>
+    <textarea style="width:300px; height:150px"> {{result}}</textarea>
+</div>
 
-    </div>
+
+<button (click)="getImage()" type="submit" class="btn-primary">Show</button>-->
+
+<div *ngIf="base64Data">
+    <div> {{base64Data}}</div>
+</div>

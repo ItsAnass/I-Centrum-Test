@@ -6,8 +6,10 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
+  
+
   private baseUrl: string = "https://localhost:7000/api/User/authenticate"
-  private getImage: string = "https://services2.i-centrum.se/recruitment/profile/avatar"
+  private getImage: string = "https://localhost:7000/api/User/image"
 
   constructor(private http: HttpClient) { }
 
@@ -15,9 +17,6 @@ export class AuthService {
     return this.http.post<any>(`${this.baseUrl}`, loginObj);
   }
 
-  //getImage(loginObj: any) {
-  //  return this.http
-  //}
 
   storeToken(tokenValue: string) {
     localStorage.setItem('token', tokenValue)
@@ -27,8 +26,15 @@ export class AuthService {
     return localStorage.getItem('token')
   }
 
-  getImg(token: any) {
-    let head_obj = new HttpHeaders().set("Authorization", "Bearer" + token)
-    return this.http.get<any>(`${this.getImage}`, { headers: head_obj });
+  getImg() {
+    return this.http.get<any>(`${this.getImage}`);
   }
+
+  //public creat_image(data: any) {
+  //  return this.http.
+  //}
+
+  //public get_image() {
+  //  return this.http.get(this.getImage);
+  //}
 }
