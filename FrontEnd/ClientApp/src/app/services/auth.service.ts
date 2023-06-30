@@ -30,10 +30,6 @@ export class AuthService {
     return this.http.get<any>(`${this.imageUrl}`);
   }
 
-  sendStringToBackend(str: string) {
-    const url = 'https://localhost:7000/api/User';
-    const body = { myString: str };
-    return this.http.post(url, body);
-  }
+  
   
 }

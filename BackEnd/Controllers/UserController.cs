@@ -97,14 +97,14 @@ namespace BackEnd.Controllers
 			}
 		}
 
-		private string _removeExtraCode(string base64Code)
-		{
-			string input = base64Code;
-			int index = input.IndexOf("//");
-			if (index >= 0)
-				input = input.Substring(0, index);
+		//private string _removeExtraCode(string base64Code)
+		//{
+		//	string input = base64Code;
+		//	int index = input.IndexOf("//");
+		//	if (index >= 0)
+		//		input = input.Substring(0, index);
 
-			return input;
-		}
+		//	return input;
+		//}
 	}
 }

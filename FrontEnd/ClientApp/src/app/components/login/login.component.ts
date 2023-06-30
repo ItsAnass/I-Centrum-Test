@@ -32,38 +32,29 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res.messsage)
-          this.auth.storeToken(res.token);         
-          this.result = localStorage.getItem('token')?.toString();        
+          this.auth.storeToken(res.token);
+          this.result = localStorage.getItem('token')?.toString();
           this.auth.getImg().subscribe({
             next: (result) => {
               console.log(result)
-            }})      
-          return this.result;          
+            }
+          })
+          return this.result;
         },
         error: (err) => {
           alert(err?.error.message)
         }
-      }) 
+      })
   }
-
-   myString = 'Hello, C# backend!';
-  test() {
-    this.auth.sendStringToBackend(this.myString).subscribe(
-      response => {
-        console.log('String sent successfully!');
-        // Handle the response from the backend if needed
-      },
-      error => {
-        console.error('Error sending string:', error);
-        // Handle the error if needed
-      }
-    );
-  }
-  
-
-
-  
-
-
-
 }
+
+  
+
+  
+
+
+  
+
+
+
+
