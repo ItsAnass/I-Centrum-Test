@@ -68,9 +68,9 @@ export class LoginComponent implements OnInit {
     const byteArray = new Uint8Array(atob(toBase64).split('').map(char => char.charCodeAt(0)));
 
 
-    const file = new Blob([byteArray], { type: 'application/pdf'})
+    const file = new Blob([byteArray], { type: 'image/PNG'})
     /*this.imageUrl = URL.createObjectURL(file);*/
-     const fileUrl = URL.createObjectURL(file)
+    const fileUrl = URL.createObjectURL(file)
     let filename = 'downloaded';
     let link = document.createElement('a');
     link.download = filename;
