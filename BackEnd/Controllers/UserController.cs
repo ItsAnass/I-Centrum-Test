@@ -66,7 +66,7 @@ namespace BackEnd.Controllers
 				//var baseCode64 = _removeExtraCode(code64);
 				if (code64 == string.Empty|| code64 == null) return BadRequest();
 
-				return Ok(code64);
+				return Ok( new { Response = code64 });
 			}
 		}
 
