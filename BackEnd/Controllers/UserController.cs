@@ -2,50 +2,110 @@
 using Newtonsoft.Json;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web;
+
 
 namespace BackEnd.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	
+
 	public class UserController : ControllerBase
 	{
+		private readonly IHttpContextAccessor _contextAccessor;
+
+		public UserController(IHttpContextAccessor contextAccessor)
+		{
+			_contextAccessor = contextAccessor;
+		}
+
+
+
 		[HttpPost("authenticate")]
 		public async Task<IActionResult> Authenticate([FromBody] User postData)
-		{			
-			
-			var token = GetToken(postData);
+		{
+			var token = _getToken(postData);
 
-			return Ok(new
-			{
-				Token = token,
-			});			
-		}	
-		
-		private string GetToken(User user)
+			if (token == null) return BadRequest(string.Empty);
+			
+			_contextAccessor.HttpContext.Session.SetString("token", token);
+
+			return Ok(new{Token = token});
+		}
+
+		[HttpGet("image")]
+		public async Task<IActionResult> GetBase64Image()
+		{
+			var b64Code = _getBase64Code();
+			
+			if (b64Code == null)
+				return BadRequest();
+
+			return Ok(b64Code);
+		}
+
+
+		private string _getToken(User user)
 		{
 			using (var client = new HttpClient())
 			{
-				var endpoint = "https://services2.i-centrum.se/recruitment/auth";
+				var endPoint = "https://services2.i-centrum.se/recruitment/auth";
 
-				var post = new User()
+				var credential = new User()
 				{
 					UserName = user.UserName,
 					Password = user.Password,
 				};
 
-				var postJson = JsonConvert.SerializeObject(post);
+				var serData = JsonConvert.SerializeObject(credential);
 
-				var payload = new StringContent(postJson, Encoding.UTF8, "application/json");
+				var payload = new StringContent(serData, Encoding.UTF8, "application/json");
 
-				var result = client.PostAsync(endpoint, payload).Result.Content.ReadAsStringAsync().Result;
+				var getTokenObj = client.PostAsync(endPoint, payload).Result.Content.ReadAsStringAsync().Result;
 
-				var desData = (JObject)JsonConvert.DeserializeObject(result);
+				var desData = (JObject)JsonConvert.DeserializeObject(getTokenObj);
 
 				var token = desData.SelectToken("token").Value<string>();
 
+				if (token == null) return null;
+
 				return token;
 			}
+		}
+
+
+		private string _getBase64Code()
+		{
+			using (var client = new HttpClient())
+			{
+				var endPoint = "https://services2.i-centrum.se/recruitment/profile/avatar";
+
+				var getTokenfromSession = _contextAccessor.HttpContext.Session.GetString("token");
+
+				//passing auth header token
+				client.DefaultRequestHeaders.Add("Authorization", "Bearer " + getTokenfromSession);
+
+				var getBase64CodeFromEndpoint = client.GetStringAsync(endPoint).Result;
+
+				var desData = (JObject)JsonConvert.DeserializeObject(getBase64CodeFromEndpoint);
+
+				var code64 = desData.SelectToken("data").Value<string>();
+
+				var baseCode64 = _removeExtraCode(code64);
+
+				return baseCode64;
+			}
+		}
+
+		private string _removeExtraCode(string base64Code)
+		{
+			string input = base64Code;
+			int index = input.IndexOf("//");
+			if (index >= 0)
+				input = input.Substring(0, index);
+
+			return input;
 		}
 	}
 }
